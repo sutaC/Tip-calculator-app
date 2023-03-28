@@ -65,19 +65,21 @@
     
     <div class="summary">
 
-        <div class="wrapper">
-            <div class="summary-block">
-                <h2>Tip Amount</h2>
-                <p>/ person</p>
+        <div>
+            <div class="wrapper">
+                <div class="summary-block">
+                    <h2>Tip Amount</h2>
+                    <p>/ person</p>
+                </div>
+                <p class="ammount">$0.00</p>
             </div>
-            <p class="ammount">$0.00</p>
-        </div>
-        <div class="wrapper">
-            <div class="summary-block">
-                <h2>Total</h2>
-                <p>/ person</p>
+            <div class="wrapper">
+                <div class="summary-block">
+                    <h2>Total</h2>
+                    <p>/ person</p>
+                </div>
+                <p class="ammount">$0.00</p>
             </div>
-            <p class="ammount">$0.00</p>
         </div>
         
         <button>RESET</button>
@@ -110,12 +112,6 @@
         --clr-light-grayish-cyan: hsl(185, 41%, 84%);
         --clr-very-light-grayish-cyan: hsl(189, 41%, 97%);
         --clr-white: hsl(0, 0%, 100%);
-        
-
-
-
-        font-family: var(--ff-space-mono);
-        font-size: var(--fz--24px-regular);
 
     }
 
@@ -130,11 +126,9 @@
         display: flex;
         flex-direction: column;
         justify-content: center;
-        align-items: center;
 
         box-sizing: border-box;
         min-height: 100vh;
-        width: 100vw;
 
         margin: 0;
         padding: 0;
@@ -149,17 +143,19 @@
         justify-content: center;
         align-items: center;
 
-        width: 100%;
-        min-height: 10rem;
+        max-width: 100%;
+        min-height: 8rem;
 
 
     }
 
     main {
         box-sizing: border-box;
-        width: 100%;
+        flex: 1;
 
-        padding: 10%;
+        max-width: 100%;
+
+        padding: 1rem;
 
         border-radius: 1rem 1rem 0 0;
 
@@ -167,7 +163,7 @@
     }
     main > * {
         max-width: 100%;
-        margin: 2rem 0;
+        margin-bottom: 2rem;
     }
 
 
@@ -222,9 +218,11 @@
         align-items: center;
         justify-content: center;
         
+        box-sizing: border-box;
         margin: 0.5rem;
         
         min-height: 2.5rem;
+        max-width: 7rem;
 
         border-radius: 0.3rem;
         
@@ -240,13 +238,12 @@
     }
     .select-field > input:checked + label {
         background-color: var(--clr-strong-cyan);
-        columns: var(--clr-dark-grayish-cyan);
+        color: var(--clr-very-dark-cyan );
     }
 
     .select-item:last-of-type {
         background-color: var(--clr-very-light-grayish-cyan);
         border: 2px solid transparent;
-        padding: 0.5rem;
     }
     .select-item:last-of-type > input {
         box-sizing: border-box;
@@ -282,6 +279,9 @@
     .summary > * {
         margin: 1rem 0;
     }
+    .summary > div > * {
+        margin: 1rem 0;
+    }
     .summary button {
         box-sizing: border-box;
         width: 100%;
@@ -308,7 +308,7 @@
         color: var(--clr-grayish-cyan);
     }
     .ammount {
-        font-size: 1.5rem;
+        font-size: 2.5em;
         color: var(--clr-strong-cyan);
     }
 
@@ -326,6 +326,45 @@
     }
     .error-field {
         border: 2px solid red;
+    }
+
+
+    /* # Desktp styles # */
+
+    @media (min-width: 550px) {
+
+        :global(body) {
+            align-items: center;
+        }
+
+        main {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: repeat(3, minmax(0, 1fr));
+            gap: 1rem;
+
+            border-radius: 1rem;
+
+            max-height: 29rem;
+        }
+        main > * {
+            margin: 0;
+        }
+
+        .summary {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            grid-column: 2;
+            grid-row: 1/4;
+
+        }
+
+        .select-field {
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
     }
 
 </style>
