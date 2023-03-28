@@ -6,17 +6,16 @@
     let customTip;
     
 
-    let ammount;
-    $: { // Calculate ammount of tip
+    let tipAmmount;
+    $: { // Calculate tipAmmount of tip
         if(tip === "custom") {
-            ammount = Math.round((bill * (customTip / 100)) * 100) /100
+            tipAmmount = Math.round( (((bill * (customTip / 100)) / people)  * 100)) / 100
         } else {
-            ammount = Math.round((bill * (tip / 100)) * 100) /100
+            tipAmmount = Math.round( (((bill * (tip / 100)) / people)  * 100)) / 100
         }
     }
     
-
-    $: perPerson = Math.round((ammount / Math.floor(people)) * 100) /100 // Calculate ammount of tip per person
+    $: totalAmmount = Math.round(  (bill / people + tipAmmount )  * 100) /100 // Calculate tipAmmount of tip per person
     
     
     let invalidFiles = [];
@@ -27,7 +26,7 @@
         invalidFiles = []
 
 
-        // Validate bill ammount 
+        // Validate bill tipAmmount 
         if(bill > 1000000){ // Is less than or equal to 1000000
             valid = false
             invalidFiles = [...invalidFiles, {file: 'bill', message: 'Is too large'}]
@@ -38,7 +37,7 @@
 
 
         // Validate the number of people
-        if (perPerson === 0 || people > 1000000) { // Is less than or equal to 1000000 and is perPerson ammount grater than 0
+        if (totalAmmount === 0 || people > 1000000) { // Is less than or equal to 1000000 and is totalAmmount tipAmmount grater than 0
             valid = false
             invalidFiles = [...invalidFiles, {file: 'people', message: 'Is too large'}]
         } 
@@ -63,7 +62,7 @@
 
 
         // Validate outpt
-        if(isNaN(ammount) || isNaN(perPerson)){
+        if(isNaN(tipAmmount) || isNaN(totalAmmount)){
             valid = false
         }
 
@@ -180,10 +179,10 @@
                     <h2>Tip Amount</h2>
                     <p>/ person</p>
                 </div>
-                <p class="ammount">
+                <p class="tipAmmount">
                     $
                     {#if valid}
-                        {ammount}
+                        {tipAmmount}
                     {:else if invalidFiles.length > 0}
                         -.--
                     {:else}
@@ -196,10 +195,10 @@
                     <h2>Total</h2>
                     <p>/ person</p>
                 </div>
-                <p class="ammount">
+                <p class="tipAmmount">
                     $
                     {#if valid}
-                        {perPerson}
+                        {totalAmmount}
                     {:else if invalidFiles.length > 0}
                         -.--
                     {:else}
@@ -446,7 +445,7 @@
         color: var(--clr-grayish-cyan);
     }
 
-    .ammount {
+    .tipAmmount {
         font-size: 2.5em;
         color: var(--clr-strong-cyan);
     }
