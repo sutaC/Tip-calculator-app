@@ -1,6 +1,25 @@
 <script>
 
+    let bill;
+    let people;
+    let tip;
+    let customTip;
 
+    let ammount;
+
+    $: if(tip === "custom") {
+            ammount = Math.round((bill * (customTip / 100)) * 100) /100
+        } else {
+            ammount = Math.round((bill * (tip / 100)) * 100) /100
+        }
+    $: perPerson = Math.round((ammount / people) * 100) /100
+
+
+    const handleReset = () => {
+        bill = 0;
+        people = 0;
+        customTip = 0;
+    }
 
 </script>
 <!-- ---  -->
@@ -18,7 +37,7 @@
         </div>
         <div class="input-field">
             <img src="/icon-dollar.svg" alt="Icon dollar">
-            <input type="number" name='bill' placeholder="0">
+            <input type="number" name='bill' placeholder="0" bind:value={bill}>
         </div>
     </section>
 
@@ -30,23 +49,25 @@
         </div>
         <div class="select-field">
 
-            <input type="radio" name="tip" id="tip1">
+            <input type="radio" name="tip" id="tip1" value="5" bind:group={tip}>
             <label for="tip1" class="select-item">5%</label>
 
-            <input type="radio" name="tip" id="tip2">
+            <input type="radio" name="tip" id="tip2" value="10" bind:group={tip}>
             <label for="tip2" class="select-item">10%</label>
 
-            <input type="radio" name="tip" id="tip3" checked>
+            <input type="radio" name="tip" id="tip3" value="15" bind:group={tip} checked>
             <label for="tip3" class="select-item">15%</label>
 
-            <input type="radio" name="tip" id="tip4">
+            <input type="radio" name="tip" id="tip4" value="25" bind:group={tip}>
             <label for="tip4" class="select-item">25%</label>
 
-            <input type="radio" name="tip" id="tip5">
+            <input type="radio" name="tip" id="tip5" value="50" bind:group={tip}>
             <label for="tip5" class="select-item">50%</label>
 
-            <input type="radio" name="tip" id="tip6">
-            <label for="tip6" class="select-item"><input type="number" placeholder="Custom"></label>
+            <input type="radio" name="tip" id="tip6" value="custom" bind:group={tip}>
+            <label for="tip6" class="select-item">
+                <input type="number" bind:value={customTip} placeholder="Custom">
+            </label>
 
         </div>
     </section>
@@ -59,7 +80,7 @@
         </div>
         <div class="input-field error-field">
             <img src="/icon-person.svg" alt="Icon person">
-            <input type="number" name='people' placeholder="0">
+            <input type="number" name='people' placeholder="0" bind:value={people}>
         </div>
     </section>
     
@@ -71,18 +92,18 @@
                     <h2>Tip Amount</h2>
                     <p>/ person</p>
                 </div>
-                <p class="ammount">$0.00</p>
+                <p class="ammount">${ammount}</p>
             </div>
             <div class="wrapper">
                 <div class="summary-block">
                     <h2>Total</h2>
                     <p>/ person</p>
                 </div>
-                <p class="ammount">$0.00</p>
+                <p class="ammount">${perPerson}</p>
             </div>
         </div>
         
-        <button>RESET</button>
+        <button on:click={handleReset}>RESET</button>
 
     </div>
 
