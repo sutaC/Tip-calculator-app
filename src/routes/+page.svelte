@@ -4,25 +4,38 @@
     let people;
     let tip;
     let customTip;
+    
 
     let ammount;
-
-    let invalidFiles = [];
-    let valid = true;
-
-    $: people = Math.floor(people)
-    $: if(tip === "custom") {
+    $: { // Calculate ammount of tip
+        if(tip === "custom") {
             ammount = Math.round((bill * (customTip / 100)) * 100) /100
         } else {
             ammount = Math.round((bill * (tip / 100)) * 100) /100
         }
-    $: perPerson = Math.round((ammount / people) * 100) /100
+    }
+    
 
-
-    $: { // Validate inputs
+    $: perPerson = Math.round((ammount / Math.floor(people)) * 100) /100 // Calculate ammount of tip per person
+    
+    
+    let invalidFiles = [];
+    let valid = true;
+    $: { // Validate data
         
         valid = true
         invalidFiles = []
+
+
+        // Validate bill ammount 
+        if(bill > 1000000){ // Is less than or equal to 1000000
+            valid = false
+            invalidFiles = [...invalidFiles, {file: 'bill', message: 'Is too large'}]
+        } else if (bill < 0.01) { // Is greater than or equal to 0.01
+            valid = false
+            invalidFiles = [...invalidFiles, {file: 'bill', message: 'Is too small'}]
+        }
+
 
         // Validate the number of people
         if (perPerson === 0 || people > 1000000) { // Is less than or equal to 1000000 and is perPerson ammount grater than 0
@@ -34,14 +47,6 @@
             invalidFiles = [...invalidFiles, {file: 'people', message: 'Is too small'}]
         }
 
-        // Validate bill ammount 
-        if(people > 1000000){ // Is less than or equal to 1000000
-            valid = false
-            invalidFiles = [...invalidFiles, {file: 'bill', message: 'Is too large'}]
-        } else if (bill < 0.01) { // Is greater than or equal to 0.01
-            valid = false
-            invalidFiles = [...invalidFiles, {file: 'bill', message: 'Is too small'}]
-        }
 
         // Validate tip
         if (tip === 'custom'){ // Custom tip
@@ -56,19 +61,19 @@
 
         }
 
+
         // Validate outpt
-        if(isNaN(ammount)){
+        if(isNaN(ammount) || isNaN(perPerson)){
             valid = false
         }
-
-        console.log(invalidFiles);
 
     }
 
     const handleReset = () => {
-        bill = '';
-        people = '';
-        customTip = '';
+        bill = undefined;
+        people = undefined;
+        tip = undefined;
+        customTip = undefined;
     }
 
 </script>
@@ -134,6 +139,7 @@
                     max="100" 
                     bind:value={customTip} 
                     class:error-field={invalidFiles.some(e => e.file === 'tip')}
+                    on:click={() => tip = 'custom'}
                 >
             </label>
 
@@ -203,7 +209,12 @@
             </div>
         </div>
         
-        <button on:click={handleReset}>RESET</button>
+        <button 
+            disabled={!bill && !people && !tip && !customTip}
+            on:click={handleReset}
+        >
+            RESET
+        </button>
 
     </div>
 
@@ -400,9 +411,11 @@
     .summary > * {
         margin: 1rem 0;
     }
+
     .summary > div > * {
         margin: 1rem 0;
     }
+
     .summary button {
         box-sizing: border-box;
         width: 100%;
@@ -420,6 +433,10 @@
     .summary button:active {
         background-color: var(--clr-light-grayish-cyan);
     }
+    .summary button:disabled {
+        opacity: 0.5;
+    }
+
     .summary-block > h2 {
         font-size: 0.8rem;
         color: var(--clr-white);
@@ -428,6 +445,7 @@
         font-size: 0.7rem;
         color: var(--clr-grayish-cyan);
     }
+
     .ammount {
         font-size: 2.5em;
         color: var(--clr-strong-cyan);
