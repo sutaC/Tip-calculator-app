@@ -7,6 +7,10 @@
 
     let ammount;
 
+    let invalidFiles = [];
+    let valid = true;
+
+    $: people = Math.floor(people)
     $: if(tip === "custom") {
             ammount = Math.round((bill * (customTip / 100)) * 100) /100
         } else {
@@ -15,10 +19,56 @@
     $: perPerson = Math.round((ammount / people) * 100) /100
 
 
+    $: { // Validate inputs
+        
+        valid = true
+        invalidFiles = []
+
+        // Validate the number of people
+        if (perPerson === 0 || people > 1000000) { // Is less than or equal to 1000000 and is perPerson ammount grater than 0
+            valid = false
+            invalidFiles = [...invalidFiles, {file: 'people', message: 'Is too large'}]
+        } 
+        else if (people < 1) { // Is greater than or equal to 1
+            valid = false
+            invalidFiles = [...invalidFiles, {file: 'people', message: 'Is too small'}]
+        }
+
+        // Validate bill ammount 
+        if(people > 1000000){ // Is less than or equal to 1000000
+            valid = false
+            invalidFiles = [...invalidFiles, {file: 'bill', message: 'Is too large'}]
+        } else if (bill < 0.01) { // Is greater than or equal to 0.01
+            valid = false
+            invalidFiles = [...invalidFiles, {file: 'bill', message: 'Is too small'}]
+        }
+
+        // Validate tip
+        if (tip === 'custom'){ // Custom tip
+
+            if(customTip > 100){ // Is less than or equal to 100
+                valid = false
+                invalidFiles = [...invalidFiles, {file: 'tip', message: 'Is too large'}]
+            } else if (customTip < 0.01) { // Is greater than or equal to 0.01
+                valid = false
+                invalidFiles = [...invalidFiles, {file: 'tip', message: 'Is too small'}]
+            }
+
+        }
+
+        // Validate outpt
+        if(isNaN(ammount)){
+            valid = false
+        }
+
+        console.log(invalidFiles);
+
+    }
+
     const handleReset = () => {
-        bill = 0;
-        people = 0;
-        customTip = 0;
+        bill = '';
+        people = '';
+        customTip = '';
     }
 
 </script>
@@ -33,11 +83,18 @@
     <section>
         <div class="wrapper">
             <h1>Bill</h1>
-            <p class="error-message">err</p>
+            {#each invalidFiles.filter(e => e.file === 'bill') as err}
+                <p class="error-message">
+                    {err.message}
+                </p>
+            {/each}
         </div>
-        <div class="input-field">
+        <div 
+            class="input-field"
+            class:error-field={invalidFiles.some(e => e.file === 'bill')}
+        >
             <img src="/icon-dollar.svg" alt="Icon dollar">
-            <input type="number" name='bill' placeholder="0" bind:value={bill}>
+            <input type="number" name='bill' placeholder="0" bind:value={bill} min="0.01" max="1000000">
         </div>
     </section>
 
@@ -45,7 +102,11 @@
     <section>
         <div class="wrapper">
             <h1>Select Tip %</h1>
-            <p class="error-message">err</p>
+            {#each invalidFiles.filter(e => e.file === 'tip') as err}
+                <p class="error-message">
+                    {err.message}
+                </p>
+            {/each}
         </div>
         <div class="select-field">
 
@@ -55,7 +116,7 @@
             <input type="radio" name="tip" id="tip2" value="10" bind:group={tip}>
             <label for="tip2" class="select-item">10%</label>
 
-            <input type="radio" name="tip" id="tip3" value="15" bind:group={tip} checked>
+            <input type="radio" name="tip" id="tip3" value="15" bind:group={tip}>
             <label for="tip3" class="select-item">15%</label>
 
             <input type="radio" name="tip" id="tip4" value="25" bind:group={tip}>
@@ -66,7 +127,14 @@
 
             <input type="radio" name="tip" id="tip6" value="custom" bind:group={tip}>
             <label for="tip6" class="select-item">
-                <input type="number" bind:value={customTip} placeholder="Custom">
+                <input 
+                    type="number" 
+                    placeholder="Custom" 
+                    min="0.01" 
+                    max="100" 
+                    bind:value={customTip} 
+                    class:error-field={invalidFiles.some(e => e.file === 'tip')}
+                >
             </label>
 
         </div>
@@ -76,11 +144,25 @@
     <section>
         <div class="wrapper">
             <h1>Number of People</h1>
-            <p class="error-message">err</p>
+            {#each invalidFiles.filter(e => e.file === 'people') as err}
+                <p class="error-message">
+                    {err.message}
+                </p>
+            {/each}
         </div>
-        <div class="input-field error-field">
+        <div 
+            class="input-field"
+            class:error-field={invalidFiles.some(e => e.file === 'people')}
+        >
             <img src="/icon-person.svg" alt="Icon person">
-            <input type="number" name='people' placeholder="0" bind:value={people}>
+            <input 
+                type="number" 
+                name='people' 
+                placeholder="0" 
+                min="1" 
+                max="1000000"
+                bind:value={people} 
+            >
         </div>
     </section>
     
@@ -92,14 +174,32 @@
                     <h2>Tip Amount</h2>
                     <p>/ person</p>
                 </div>
-                <p class="ammount">${ammount}</p>
+                <p class="ammount">
+                    $
+                    {#if valid}
+                        {ammount}
+                    {:else if invalidFiles.length > 0}
+                        -.--
+                    {:else}
+                        0.00
+                    {/if}
+                </p>
             </div>
             <div class="wrapper">
                 <div class="summary-block">
                     <h2>Total</h2>
                     <p>/ person</p>
                 </div>
-                <p class="ammount">${perPerson}</p>
+                <p class="ammount">
+                    $
+                    {#if valid}
+                        {perPerson}
+                    {:else if invalidFiles.length > 0}
+                        -.--
+                    {:else}
+                        0.00    
+                    {/if}
+                </p>
             </div>
         </div>
         
