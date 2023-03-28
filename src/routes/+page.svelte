@@ -314,7 +314,7 @@
         
         background-color: var(--clr-very-light-grayish-cyan);
     }
-    .input-field:focus-within {
+    .input-field:focus-within:not(.error-field) {
         border: 2px solid var(--clr-strong-cyan);
     }
     .input-field input {
