@@ -29,17 +29,25 @@
             <p class="error-message">err</p>
         </div>
         <div class="select-field">
-            <div class="select-item"><input type="radio" name="tip" id="tip1"><label for="tip1">5%</label></div>
-            <div class="select-item"><input type="radio" name="tip" id="tip2"><label for="tip2">10%</label></div>
-            <div class="select-item"><input type="radio" name="tip" id="tip3" checked><label for="tip3">15%</label></div>
-            <div class="select-item"><input type="radio" name="tip" id="tip4"><label for="tip4">25%</label></div>
-            <div class="select-item"><input type="radio" name="tip" id="tip5"><label for="tip5">50%</label></div>
-            <div class="select-item">
-                <input type="radio" name="tip" id="tip6">
-                <label for="tip6">
-                    <input type="number" placeholder="Custom">
-                </label>
-            </div>
+
+            <input type="radio" name="tip" id="tip1">
+            <label for="tip1" class="select-item">5%</label>
+
+            <input type="radio" name="tip" id="tip2">
+            <label for="tip2" class="select-item">10%</label>
+
+            <input type="radio" name="tip" id="tip3" checked>
+            <label for="tip3" class="select-item">15%</label>
+
+            <input type="radio" name="tip" id="tip4">
+            <label for="tip4" class="select-item">25%</label>
+
+            <input type="radio" name="tip" id="tip5">
+            <label for="tip5" class="select-item">50%</label>
+
+            <input type="radio" name="tip" id="tip6">
+            <label for="tip6" class="select-item"><input type="number" placeholder="Custom"></label>
+
         </div>
     </section>
 
@@ -159,6 +167,7 @@
     }
     main > * {
         max-width: 100%;
+        margin: 2rem 0;
     }
 
 
@@ -175,7 +184,7 @@
 
         border: 2px solid transparent;
         border-radius: 0.5rem;
-
+        
         background-color: var(--clr-very-light-grayish-cyan);
     }
     .input-field:focus-within {
@@ -183,28 +192,31 @@
     }
     .input-field input {
         width: 90%;
-
+        
         padding: 0;
-
+        
         border: none;
         outline: none;
-
+        
         text-align: right;
-
+        
         background-color: var(--clr-very-light-grayish-cyan);
     }
-
-
-
+    
+    
+    
     .select-field {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
         grid-auto-rows: 1fr;
-
+        
         width: 100%;
     }
-
-
+    
+    .select-field input[type="radio"] {
+        display: none;
+    }
+    
     .select-item {
         display: flex;
         align-items: center;
@@ -213,6 +225,8 @@
         margin: 0.5rem;
         
         min-height: 2.5rem;
+
+        border-radius: 0.3rem;
         
         font-size: 1.1rem;
         text-align: center;
@@ -220,23 +234,21 @@
         
         background-color: var(--clr-very-dark-cyan);
     }
-    .select-item:hover {
+    .select-item:hover:not(.select-field > input:checked + label) {
         background-color: var(--clr-light-grayish-cyan);
         color: var(--clr-very-dark-cyan);
     }
-    .select-item + .select-item input[type="radio"]:checked  {
-        background-color: red;
+    .select-field > input:checked + label {
+        background-color: var(--clr-strong-cyan);
+        columns: var(--clr-dark-grayish-cyan);
     }
 
-    
     .select-item:last-of-type {
         background-color: var(--clr-very-light-grayish-cyan);
         border: 2px solid transparent;
+        padding: 0.5rem;
     }
-    .select-item:last-of-type:focus-within {
-        border: 2px solid var(--clr-strong-cyan);
-    }
-    .select-item:last-of-type > label > input {
+    .select-item:last-of-type > input {
         box-sizing: border-box;
         width: 100%;
         
@@ -247,14 +259,13 @@
 
         background-color: transparent;
     }
+    .select-field > input:last-of-type:checked + label {
+        background-color: var(--clr-very-light-grayish-cyan);
+        border: 2px solid var(--clr-strong-cyan);
+
+    }
     
 
-    .select-item input[type="radio"] {
-        display: none;
-    }
-    .select-item label {
-        width: 100%;
-    }
     
     
     .summary {
